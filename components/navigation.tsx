@@ -172,6 +172,24 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
+            {/* Join Waitlist CTA (desktop) */}
+            <motion.div
+              className="hidden md:block"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                variant="secondary"
+                size="sm"
+                className="hover-glow"
+                asChild
+              >
+                <Link href="/waitlist" className="flex items-center">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Join Waitlist
+                </Link>
+              </Button>
+            </motion.div>
             {isConnected ? (
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -236,6 +254,21 @@ export function Navigation() {
         className="md:hidden overflow-hidden"
       >
         <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border/50 bg-card/50 backdrop-blur-sm">
+          {/* Mobile Join Waitlist CTA */}
+          <div className="px-1 pb-2">
+            <Button
+              className="w-full ton-button"
+              asChild
+              onClick={() => setIsOpen(false)}
+            >
+              <Link
+                href="/waitlist"
+                className="flex items-center justify-center"
+              >
+                <TrendingUp className="h-4 w-4 mr-2" /> Join Waitlist
+              </Link>
+            </Button>
+          </div>
           {navItems.map((item, index) => {
             const Icon = item.icon;
             return (
