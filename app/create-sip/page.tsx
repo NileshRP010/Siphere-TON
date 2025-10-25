@@ -739,7 +739,7 @@ export default function CreateSIP() {
                 (currentStep === 1 && !formData.strategy) ||
                 (currentStep === 2 && !formData.startDate)
               }
-              className="bg-primary hover:bg-primary/90"
+              className="ton-button"
             >
               Next
             </Button>
@@ -747,7 +747,7 @@ export default function CreateSIP() {
             <Button
               onClick={handleSubmit}
               disabled={loading}
-              className="bg-primary hover:bg-primary/90"
+              className="ton-button"
             >
               {loading ? "Creating..." : "Create SIP Plan"}
             </Button>

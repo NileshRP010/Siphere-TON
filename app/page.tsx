@@ -135,10 +135,7 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Badge
-                  variant="secondary"
-                  className="mb-6 bg-primary/10 text-primary border-primary/20 animate-pulse-slow hover-glow"
-                >
+                <div className="ton-badge mb-6 animate-pulse-slow hover-glow">
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{
@@ -149,8 +146,8 @@ export default function Home() {
                   >
                     <Sparkles className="w-4 h-4 mr-2" />
                   </motion.div>
-                  Now Live on TON Blockchain
-                </Badge>
+                  🚀 Now Live on TON Blockchain
+                </div>
               </motion.div>
 
               <motion.h1
@@ -165,7 +162,7 @@ export default function Home() {
                 >
                   Invest Smarter,
                 </motion.span>{" "}
-                <span className="gradient-text relative text-shimmer">
+                <span className="ton-gradient-text relative text-shimmer">
                   <motion.span
                     whileHover={{ scale: 1.1 }}
                     className="inline-block"
@@ -188,7 +185,7 @@ export default function Home() {
                 transition={{ duration: 1, delay: 0.4 }}
                 whileHover={{ scale: 1.02 }}
               >
-                Your Crypto SIP starts here.
+                Your TON DeFi Journey Starts Here
               </motion.p>
 
               <motion.p
@@ -197,9 +194,10 @@ export default function Home() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.6 }}
               >
-                Create systematic investment plans using TON, USDT, or USDC.
-                Auto-deploy into staking or lending strategies on TON blockchain
-                with optional insurance protection.
+                Create systematic investment plans using TON, USDT, or USDC on
+                the TON blockchain. Auto-deploy into staking, lending, or DeFi
+                strategies with optional insurance protection. Built for the TON
+                ecosystem with human-readable interfaces.
               </motion.p>
 
               <motion.div
@@ -216,7 +214,7 @@ export default function Home() {
                 >
                   <Button
                     size="lg"
-                    className="animate-glow bg-primary hover:bg-primary/90 text-lg px-8 py-4 button-hover"
+                    className="ton-button animate-glow text-lg px-8 py-4"
                   >
                     <Link href="/create-sip" className="flex items-center">
                       Start Your SIP
@@ -1491,8 +1489,15 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <motion.p whileHover={{ scale: 1.02 }}>
-              &copy; 2025 Siphere. All rights reserved. Built on TON blockchain.
+            <motion.p
+              whileHover={{ scale: 1.02 }}
+              className="ton-gradient-text"
+            >
+              &copy; 2025 Siphere. All rights reserved.
+              <br />
+              <span className="text-sm">
+                Powered by TON blockchain • Built for the TON ecosystem
+              </span>
             </motion.p>
           </motion.div>
         </div>

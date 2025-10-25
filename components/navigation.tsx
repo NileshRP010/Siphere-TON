@@ -66,7 +66,9 @@ export function Navigation() {
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
                 />
-                <span className="text-xl font-bold gradient-text">Siphere</span>
+                <span className="text-xl font-bold ton-gradient-text">
+                  Siphere
+                </span>
               </Link>
             </motion.div>
           </div>
@@ -193,10 +195,7 @@ export function Navigation() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button
-                  onClick={connect}
-                  className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg font-medium button-hover"
-                >
+                <Button onClick={connect} className="ton-button">
                   Connect TON Wallet
                 </Button>
               </motion.div>
