@@ -36,6 +36,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Navigation } from "@/components/navigation";
 import { useTonSiphere } from "@/hooks/use-ton-siphere";
+import { ErrorFeedback } from "@/components/ui/error-feedback";
 import Link from "next/link";
 
 const strategies = [
@@ -92,7 +93,7 @@ const frequencies = [
 
 export default function CreateSIP() {
   const router = useRouter();
-  const { createSIP, loading } = useTonSiphere();
+  const { createSIP, loading, error, errorType } = useTonSiphere();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
@@ -181,6 +182,14 @@ export default function CreateSIP() {
           </div>
         </div>
 
+        {/* Error Feedback */}
+        <ErrorFeedback
+          error={error}
+          type={errorType}
+          onRetry={() => window.location.reload()}
+          onDismiss={() => {}}
+        />
+
         {/* Progress Indicator */}
         <div className="mb-8 overflow-x-auto">
           <div className="flex items-center justify-between mb-4 min-w-max">
@@ -235,7 +244,7 @@ export default function CreateSIP() {
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Basic Information</h2>
                   <p className="text-muted-foreground">
-                    Let's start with the basics of your SIP
+                    Let&apos;s start with the basics of your SIP
                   </p>
                 </div>
 

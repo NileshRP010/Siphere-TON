@@ -591,7 +591,7 @@ export default function Features() {
                       ))}
                     </div>
                     <p className="text-muted-foreground mb-4 italic">
-                      "{testimonial.content}"
+                      &quot;{testimonial.content}&quot;
                     </p>
                     <div>
                       <p className="font-semibold">{testimonial.name}</p>

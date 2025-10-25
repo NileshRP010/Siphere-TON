@@ -42,6 +42,9 @@ export function useTonSiphere() {
   const [insurance, setInsurance] = useState<InsuranceData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorType, setErrorType] = useState<
+    "wallet" | "transaction" | "insurance" | "network"
+  >("transaction");
 
   // Initialize contracts
   useEffect(() => {
@@ -95,6 +98,7 @@ export function useTonSiphere() {
       setSips(mockSIPs);
     } catch (err) {
       setError("Failed to load SIPs");
+      setErrorType("network");
       console.error("Error loading SIPs:", err);
     } finally {
       setLoading(false);
@@ -184,6 +188,7 @@ export function useTonSiphere() {
         return contractAddress;
       } catch (err) {
         setError("Failed to create SIP");
+        setErrorType("transaction");
         console.error("Error creating SIP:", err);
         throw err;
       } finally {
@@ -289,6 +294,7 @@ export function useTonSiphere() {
     insurance,
     loading,
     error,
+    errorType,
     createSIP,
     toggleSIP,
     executeSIP,

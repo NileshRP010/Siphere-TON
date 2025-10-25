@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTonSiphere } from "@/hooks/use-ton-siphere";
+import { DemoMode } from "@/components/ui/demo-mode";
+import { OnboardingFlow } from "@/components/ui/onboarding-flow";
 import {
   TrendingUp,
   DollarSign,
@@ -17,6 +19,8 @@ import {
   Pause,
   Settings,
   Trash2,
+  Lightbulb,
+  Eye,
 } from "lucide-react";
 import {
   Card,
@@ -163,7 +167,19 @@ const recentTransactions = [
 
 export default function Dashboard() {
   const [selectedPeriod, setSelectedPeriod] = useState("7d");
+  const [showDemoMode, setShowDemoMode] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
   const { sips, loading, toggleSIP, executeSIP } = useTonSiphere();
+
+  // Check for first visit
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("siphere-visited");
+    if (!hasVisited) {
+      setIsFirstVisit(true);
+      localStorage.setItem("siphere-visited", "true");
+    }
+  }, []);
 
   const handleSIPAction = async (sipId: string, action: string) => {
     try {
@@ -185,6 +201,11 @@ export default function Dashboard() {
     }
   };
 
+  // Show demo mode if requested
+  if (showDemoMode) {
+    return <DemoMode onExitDemo={() => setShowDemoMode(false)} />;
+  }
+
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -198,12 +219,30 @@ export default function Dashboard() {
               Track your SIP performance and manage investments
             </p>
           </div>
-          <Button className="ton-button font-medium mt-4 sm:mt-0" asChild>
-            <Link href="/create-sip" className="flex items-center">
-              <Plus className="w-4 h-4 mr-2" />
-              Create New SIP
-            </Link>
-          </Button>
+          <div className="flex gap-3 mt-4 sm:mt-0">
+            <Button
+              variant="outline"
+              onClick={() => setShowDemoMode(true)}
+              className="flex items-center"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View Demo
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowOnboarding(true)}
+              className="flex items-center"
+            >
+              <Lightbulb className="w-4 h-4 mr-2" />
+              Help
+            </Button>
+            <Button className="ton-button font-medium" asChild>
+              <Link href="/create-sip" className="flex items-center">
+                <Plus className="w-4 h-4 mr-2" />
+                Create New SIP
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Portfolio Overview */}
@@ -598,8 +637,8 @@ export default function Dashboard() {
                     Analytics Coming Soon
                   </h3>
                   <p className="text-muted-foreground">
-                    We're building comprehensive analytics to help you track
-                    your performance.
+                    We&apos;re building comprehensive analytics to help you
+                    track your performance.
                   </p>
                 </div>
               </CardContent>
@@ -607,6 +646,16 @@ export default function Dashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Onboarding Flow */}
+      {(showOnboarding || isFirstVisit) && (
+        <OnboardingFlow
+          onComplete={() => {
+            setShowOnboarding(false);
+            setIsFirstVisit(false);
+          }}
+        />
+      )}
     </div>
   );
 }

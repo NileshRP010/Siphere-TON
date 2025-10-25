@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "moduleNameMapping": {
+      "^@/(.*)$": "<rootDir>/$1"
+    }
+  }
+}

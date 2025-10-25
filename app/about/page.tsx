@@ -201,7 +201,7 @@ export default function About() {
                 <span className="gradient-text block">Siphere</span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                We're democratizing long-term crypto investing through
+                We&apos;re democratizing long-term crypto investing through
                 automation, transparency, and community governance. Our mission
                 is to make DeFi accessible to everyone.
               </p>
@@ -225,9 +225,10 @@ export default function About() {
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                   Siphere was born from the belief that everyone should have
                   access to sophisticated investment strategies, regardless of
-                  their technical knowledge or investment size. We're building
-                  the infrastructure to make systematic crypto investing as
-                  simple as setting up a traditional savings account.
+                  their technical knowledge or investment size. We&apos;re
+                  building the infrastructure to make systematic crypto
+                  investing as simple as setting up a traditional savings
+                  account.
                 </p>
                 <div className="space-y-4">
                   {[

@@ -240,8 +240,8 @@ export default function Home() {
                     className="text-lg px-8 py-4 button-hover hover-glow"
                     asChild
                   >
-                    <Link href="/how-it-works" className="flex items-center">
-                      Learn How
+                    <Link href="/dashboard" className="flex items-center">
+                      Try Demo
                       <BarChart3 className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
@@ -1171,11 +1171,11 @@ export default function Home() {
               className="text-lg text-muted-foreground mb-8 leading-relaxed"
               whileHover={{ scale: 1.01 }}
             >
-              Siphere's mission is to democratize long-term crypto investing
-              through automation and protection. We provide safe, automated, and
-              transparent DeFi investment solutions that remove the complexity
-              of manual portfolio management while offering optional insurance
-              against protocol risks.
+              Siphere&apos;s mission is to democratize long-term crypto
+              investing through automation and protection. We provide safe,
+              automated, and transparent DeFi investment solutions that remove
+              the complexity of manual portfolio management while offering
+              optional insurance against protocol risks.
             </motion.p>
           </motion.div>
 
@@ -1421,6 +1421,13 @@ export default function Home() {
                   { name: "Features", href: "/features" },
                   { name: "About Us", href: "/about" },
                   { name: "FAQ", href: "/faq" },
+                ],
+              },
+              {
+                title: "Legal",
+                links: [
+                  { name: "Terms of Service", href: "/terms" },
+                  { name: "Privacy Policy", href: "/privacy" },
                 ],
               },
               {

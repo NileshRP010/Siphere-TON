@@ -53,15 +53,21 @@ export function Navigation() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
+      role="navigation"
+      aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/" className="flex items-center space-x-3 hover-glow">
+              <Link
+                href="/"
+                className="flex items-center space-x-3 hover-glow"
+                aria-label="Go to homepage"
+              >
                 <motion.img
                   src="/logo2-removebg.png"
-                  alt="Siphere Logo"
+                  alt="Siphere Logo - Automated DeFi Investment Platform"
                   className="h-12 w-12"
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
@@ -121,6 +127,9 @@ export function Navigation() {
                         ? "bg-primary/20 text-primary shadow-lg shadow-primary/20"
                         : "text-muted-foreground hover:text-primary hover:bg-primary/10"
                     )}
+                    aria-label="Learn menu - educational resources and guides"
+                    aria-expanded="false"
+                    aria-haspopup="true"
                   >
                     <span>Learn</span>
                     <motion.div
@@ -226,6 +235,10 @@ export function Navigation() {
                 size="sm"
                 className="md:hidden hover-glow"
                 onClick={() => setIsOpen(!isOpen)}
+                aria-label={
+                  isOpen ? "Close navigation menu" : "Open navigation menu"
+                }
+                aria-expanded={isOpen}
               >
                 <motion.div
                   animate={{ rotate: isOpen ? 180 : 0 }}
@@ -252,6 +265,8 @@ export function Navigation() {
         }}
         transition={{ duration: 0.3 }}
         className="md:hidden overflow-hidden"
+        role="menu"
+        aria-label="Mobile navigation menu"
       >
         <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border/50 bg-card/50 backdrop-blur-sm">
           {/* Mobile Join Waitlist CTA */}
