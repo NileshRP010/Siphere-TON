@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { 
-  BarChart3, 
-  DollarSign, 
-  Shield, 
-  Settings, 
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import {
+  BarChart3,
+  DollarSign,
+  Shield,
+  Settings,
   History,
   Menu,
   X,
@@ -17,37 +17,38 @@ import {
   HelpCircle,
   Users,
   Layers,
-  ChevronDown
-} from 'lucide-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { cn } from '@/lib/utils';
+  ChevronDown,
+} from "lucide-react";
+import { useTonWallet } from "@/components/ton-wallet-provider";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
-  { name: 'Create SIP', href: '/create-sip', icon: DollarSign },
-  { name: 'Insurance', href: '/insurance', icon: Shield },
-  { name: 'Claims', href: '/claims', icon: History },
+  { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+  { name: "Create SIP", href: "/create-sip", icon: DollarSign },
+  { name: "Insurance", href: "/insurance", icon: Shield },
+  { name: "Claims", href: "/claims", icon: History },
 ];
 
 const learnItems = [
-  { name: 'How It Works', href: '/how-it-works', icon: Settings },
-  { name: 'Features', href: '/features', icon: Layers },
-  { name: 'About Us', href: '/about', icon: Users },
-  { name: 'FAQ', href: '/faq', icon: HelpCircle },
+  { name: "How It Works", href: "/how-it-works", icon: Settings },
+  { name: "Features", href: "/features", icon: Layers },
+  { name: "About Us", href: "/about", icon: Users },
+  { name: "FAQ", href: "/faq", icon: HelpCircle },
 ];
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { isConnected, address, connect, disconnect } = useTonWallet();
 
   return (
-    <motion.nav 
+    <motion.nav
       className="glass-card border-b border-border/50 sticky top-0 z-50"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -56,14 +57,11 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/" className="flex items-center space-x-3 hover-glow">
-                <motion.img 
-                  src="/logo2-removebg.png" 
-                  alt="Siphere Logo" 
+                <motion.img
+                  src="/logo2-removebg.png"
+                  alt="Siphere Logo"
                   className="h-12 w-12"
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
@@ -113,11 +111,11 @@ export function Navigation() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     className={cn(
                       "flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover-glow",
-                      learnItems.some(item => pathname === item.href)
+                      learnItems.some((item) => pathname === item.href)
                         ? "bg-primary/20 text-primary shadow-lg shadow-primary/20"
                         : "text-muted-foreground hover:text-primary hover:bg-primary/10"
                     )}
@@ -133,7 +131,10 @@ export function Navigation() {
                   </Button>
                 </motion.div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 glass-card border-primary/20">
+              <DropdownMenuContent
+                align="end"
+                className="w-48 glass-card border-primary/20"
+              >
                 {learnItems.map((item, index) => {
                   const Icon = item.icon;
                   return (
@@ -148,7 +149,8 @@ export function Navigation() {
                           href={item.href}
                           className={cn(
                             "flex items-center space-x-2 w-full hover-glow transition-all duration-300",
-                            pathname === item.href && "bg-primary/10 text-primary"
+                            pathname === item.href &&
+                              "bg-primary/10 text-primary"
                           )}
                         >
                           <motion.div
@@ -168,18 +170,40 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <WalletMultiButton className="!bg-primary hover:!bg-primary/80 !text-primary-foreground !rounded-lg !font-medium button-hover" />
-            </motion.div>
-            
+            {isConnected ? (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center space-x-2"
+              >
+                <div className="text-sm text-muted-foreground">
+                  {address?.slice(0, 6)}...{address?.slice(-4)}
+                </div>
+                <Button
+                  onClick={disconnect}
+                  variant="outline"
+                  size="sm"
+                  className="hover-glow"
+                >
+                  Disconnect
+                </Button>
+              </motion.div>
+            ) : (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  onClick={connect}
+                  className="bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg font-medium button-hover"
+                >
+                  Connect TON Wallet
+                </Button>
+              </motion.div>
+            )}
+
             {/* Mobile menu button */}
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
               <Button
                 variant="ghost"
                 size="sm"
@@ -190,7 +214,11 @@ export function Navigation() {
                   animate={{ rotate: isOpen ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                  {isOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
                 </motion.div>
               </Button>
             </motion.div>
@@ -201,9 +229,9 @@ export function Navigation() {
       {/* Mobile Navigation */}
       <motion.div
         initial={{ height: 0, opacity: 0 }}
-        animate={{ 
-          height: isOpen ? 'auto' : 0, 
-          opacity: isOpen ? 1 : 0 
+        animate={{
+          height: isOpen ? "auto" : 0,
+          opacity: isOpen ? 1 : 0,
         }}
         transition={{ duration: 0.3 }}
         className="md:hidden overflow-hidden"
@@ -239,7 +267,7 @@ export function Navigation() {
               </motion.div>
             );
           })}
-          
+
           {/* Mobile Learn Section */}
           <div className="pt-2 border-t border-border/50 mt-2">
             <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -252,7 +280,10 @@ export function Navigation() {
                   key={item.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: (navItems.length + index) * 0.05 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: (navItems.length + index) * 0.05,
+                  }}
                 >
                   <Link
                     href={item.href}

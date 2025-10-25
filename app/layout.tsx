@@ -1,15 +1,17 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/components/theme-provider';
-import { Toaster } from '@/components/ui/sonner';
-import { WalletProvider } from '@/components/wallet-provider';
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { TonWalletProvider } from "@/components/ton-wallet-provider";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Siphere - Automated DeFi Investment Platform',
-  description: 'Invest Smarter, Automatically. Create systematic investment plans with stablecoins or SOL on Solana blockchain.',
+  title: "Siphere - Automated DeFi Investment Platform",
+  description:
+    "Invest Smarter, Automatically. Create systematic investment plans with TON, USDT, or USDC on TON blockchain.",
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
@@ -26,10 +28,10 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <WalletProvider>
+          <TonWalletProvider>
             {children}
             <Toaster />
-          </WalletProvider>
+          </TonWalletProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTonSiphere } from "@/hooks/use-ton-siphere";
 import {
   TrendingUp,
   DollarSign,
@@ -149,10 +150,26 @@ const recentTransactions = [
 
 export default function Dashboard() {
   const [selectedPeriod, setSelectedPeriod] = useState("7d");
+  const { sips, loading, toggleSIP, executeSIP } = useTonSiphere();
 
-  const handleSIPAction = (sipId: number, action: string) => {
-    console.log(`${action} SIP ${sipId}`);
-    // This would integrate with smart contracts
+  const handleSIPAction = async (sipId: string, action: string) => {
+    try {
+      switch (action) {
+        case "pause":
+          await toggleSIP(sipId, false);
+          break;
+        case "resume":
+          await toggleSIP(sipId, true);
+          break;
+        case "execute":
+          await executeSIP(sipId);
+          break;
+        default:
+          console.log(`${action} SIP ${sipId}`);
+      }
+    } catch (error) {
+      console.error("Error handling SIP action:", error);
+    }
   };
 
   return (
@@ -280,133 +297,150 @@ export default function Dashboard() {
 
           <TabsContent value="sips" className="space-y-6">
             <div className="grid gap-6">
-              {sipPlans.map((sip, index) => (
-                <motion.div
-                  key={sip.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <Card className="glass-card hover:bg-card/70 transition-colors">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg flex items-center gap-2">
-                            {sip.name}
-                            {sip.insurance && (
-                              <Shield
-                                className="w-4 h-4 text-primary"
-                                title="Insurance Protected"
-                              />
-                            )}
-                          </CardTitle>
-                          <CardDescription>
-                            ${sip.amount} • {sip.frequency} • {sip.strategy}
-                          </CardDescription>
+              {loading ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading your SIPs...</p>
+                </div>
+              ) : sips.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground mb-4">No SIPs found</p>
+                  <Button asChild>
+                    <Link href="/create-sip">Create Your First SIP</Link>
+                  </Button>
+                </div>
+              ) : (
+                sips.map((sip, index) => (
+                  <motion.div
+                    key={sip.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
+                    <Card className="glass-card hover:bg-card/70 transition-colors">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <CardTitle className="text-lg flex items-center gap-2">
+                              {sip.name}
+                              {sip.insurance && (
+                                <Shield className="w-4 h-4 text-primary" />
+                              )}
+                            </CardTitle>
+                            <CardDescription>
+                              ${sip.amount} • {sip.frequency} • {sip.strategy}
+                            </CardDescription>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge
+                              variant={
+                                sip.status === "Active"
+                                  ? "secondary"
+                                  : "outline"
+                              }
+                              className={
+                                sip.status === "Active"
+                                  ? "bg-green-500/10 text-green-400"
+                                  : ""
+                              }
+                            >
+                              {sip.status}
+                            </Badge>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm">
+                                  <MoreHorizontal className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleSIPAction(sip.id, "edit")
+                                  }
+                                >
+                                  <Settings className="w-4 h-4 mr-2" />
+                                  Edit Plan
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleSIPAction(
+                                      sip.id,
+                                      sip.status === "Active"
+                                        ? "pause"
+                                        : "resume"
+                                    )
+                                  }
+                                >
+                                  {sip.status === "Active" ? (
+                                    <>
+                                      <Pause className="w-4 h-4 mr-2" />
+                                      Pause Plan
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Play className="w-4 h-4 mr-2" />
+                                      Resume Plan
+                                    </>
+                                  )}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="text-destructive"
+                                  onClick={() =>
+                                    handleSIPAction(sip.id, "delete")
+                                  }
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Delete Plan
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <Badge
-                            variant={
-                              sip.status === "Active" ? "secondary" : "outline"
-                            }
-                            className={
-                              sip.status === "Active"
-                                ? "bg-green-500/10 text-green-400"
-                                : ""
-                            }
-                          >
-                            {sip.status}
-                          </Badge>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => handleSIPAction(sip.id, "edit")}
-                              >
-                                <Settings className="w-4 h-4 mr-2" />
-                                Edit Plan
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleSIPAction(
-                                    sip.id,
-                                    sip.status === "Active" ? "pause" : "resume"
-                                  )
-                                }
-                              >
-                                {sip.status === "Active" ? (
-                                  <>
-                                    <Pause className="w-4 h-4 mr-2" />
-                                    Pause Plan
-                                  </>
-                                ) : (
-                                  <>
-                                    <Play className="w-4 h-4 mr-2" />
-                                    Resume Plan
-                                  </>
-                                )}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-destructive"
-                                onClick={() =>
-                                  handleSIPAction(sip.id, "delete")
-                                }
-                              >
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                Delete Plan
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              Current Value
+                            </p>
+                            <p className="text-lg font-semibold">
+                              ${sip.currentValue.toLocaleString()}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              Invested
+                            </p>
+                            <p className="text-lg font-semibold">
+                              ${sip.invested.toLocaleString()}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              Returns
+                            </p>
+                            <p className="text-lg font-semibold text-green-400">
+                              +${sip.returns.toLocaleString()}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">APY</p>
+                            <p className="text-lg font-semibold">{sip.apy}%</p>
+                          </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div>
+                        <div className="mt-4 pt-4 border-t border-border">
                           <p className="text-sm text-muted-foreground">
-                            Current Value
-                          </p>
-                          <p className="text-lg font-semibold">
-                            ${sip.currentValue.toLocaleString()}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            Invested
-                          </p>
-                          <p className="text-lg font-semibold">
-                            ${sip.invested.toLocaleString()}
+                            Next execution:{" "}
+                            <span className="text-foreground font-medium">
+                              {sip.nextExecution}
+                            </span>
                           </p>
                         </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            Returns
-                          </p>
-                          <p className="text-lg font-semibold text-green-400">
-                            +${sip.returns.toLocaleString()}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">APY</p>
-                          <p className="text-lg font-semibold">{sip.apy}%</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 pt-4 border-t border-border">
-                        <p className="text-sm text-muted-foreground">
-                          Next execution:{" "}
-                          <span className="text-foreground font-medium">
-                            {sip.nextExecution}
-                          </span>
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))
+              )}
             </div>
           </TabsContent>
 
