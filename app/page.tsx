@@ -1442,7 +1442,7 @@ export default function Home() {
                         { icon: Twitter, href: "https://x.com/Siphere03" },
                         {
                           icon: Github,
-                          href: "https://github.com/NileshRP010/Siphere",
+                          href: "https://github.com/NileshRP010/Siphere-Ton",
                         },
                         { icon: MessageCircle, href: "https://discord.com/" },
                         {
