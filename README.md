@@ -17,6 +17,44 @@ Siphere is a web application that enables users to create and manage systematic 
 - **Human-Readable Interface:** Simple, intuitive UI following TON ecosystem standards
 - **Security:** Audited smart contracts, multi-signature wallets, and transparent operations
 
+## Data Flow Architecture
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend
+    participant Wallet
+    participant Contracts
+    participant SwapAPI
+    
+    Note over User,SwapAPI: User Interaction Flow
+    User->>Frontend: Connect Wallet
+    Frontend->>Wallet: Initialize TonConnect
+    Wallet-->>Frontend: Return Wallet Connection
+    
+    Note over User,SwapAPI: SIP Creation Process
+    User->>Frontend: Create SIP Request
+    Frontend->>Wallet: Request Transaction Signature
+    Wallet-->>Frontend: Return Signed Transaction
+    Frontend->>Contracts: Deploy SIP Contract
+    
+    Note over User,SwapAPI: Insurance Process
+    User->>Frontend: Initiate Insurance
+    Frontend->>Wallet: Request Premium Payment
+    Wallet-->>Frontend: Confirm Payment
+    Frontend->>Contracts: Activate Insurance Coverage
+    
+    Note over User,SwapAPI: Claims Processing
+    User->>Frontend: Submit Claim
+    Frontend->>Wallet: Request Claim Signature
+    Wallet-->>Frontend: Return Signed Claim
+    Frontend->>Contracts: Process Claim
+    Contracts->>SwapAPI: Execute Token Swap
+    SwapAPI-->>Contracts: Confirm Swap Result
+    Contracts-->>Frontend: Transfer Funds
+    Frontend-->>User: Display Claim Status
+```
+
 ## Technology Stack
 
 - **Frontend:** Next.js, React, TypeScript, Tailwind CSS, Framer Motion
