@@ -146,7 +146,7 @@ export default function Home() {
                   >
                     <Sparkles className="w-4 h-4 mr-2" />
                   </motion.div>
-                  🚀 Now Live on TON Blockchain
+                  Soon Live on TON Blockchain
                 </div>
               </motion.div>
 
