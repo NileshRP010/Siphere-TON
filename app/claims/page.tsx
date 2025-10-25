@@ -39,108 +39,82 @@ import { Navigation } from "@/components/navigation";
 const recentClaims = [
   {
     id: "CLM-001",
-    sipName: "USDC Staking SIP",
+    sipName: "TON Staking SIP",
     claimType: "Failed Transaction",
     amount: 500,
     status: "Approved",
     submittedDate: "2025-01-02",
     resolvedDate: "2025-01-04",
-    reason: "Transaction failed due to network congestion during execution",
-    evidence: "Transaction hash: 5KJp7z...",
+    reason: "Transaction failed due to TON network congestion during execution",
+    evidence:
+      "TON Transaction hash: EQD4FPq-PRDieyQKkizFTRtSDyucUIqrj0v_zXJmqaDp6_0t",
     payout: 500,
+    token: "TON",
   },
   {
     id: "CLM-002",
-    sipName: "SOL DCA Plan",
-    claimType: "Smart Contract Issue",
-    amount: 200,
+    sipName: "USDT Lending SIP",
+    claimType: "Smart Contract Failure",
+    amount: 1200,
     status: "Under Review",
-    submittedDate: "2025-01-01",
-    reason: "Temporary protocol suspension during scheduled investment",
-    evidence: "Protocol announcement, execution logs",
-    reviewDeadline: "2025-01-08",
+    submittedDate: "2025-01-05",
+    resolvedDate: null,
+    reason:
+      "Smart contract execution failed during lending protocol interaction",
+    evidence:
+      "Contract address: EQD4FPq-PRDieyQKkizFTRtSDyucUIqrj0v_zXJmqaDp6_0t",
+    payout: null,
+    token: "USDT",
   },
   {
     id: "CLM-003",
-    sipName: "Mixed Strategy SIP",
-    claimType: "Execution Bot Failure",
-    amount: 150,
-    status: "Rejected",
-    submittedDate: "2025-12-28",
-    resolvedDate: "2025-12-31",
-    reason: "Bot failed to execute scheduled investment",
-    evidence: "Execution logs, bot status",
-    rejectionReason:
-      "Insufficient evidence of bot failure - user had insufficient balance",
-  },
-  {
-    id: "CLM-004",
-    sipName: "Conservative USDT",
+    sipName: "USDC DeFi SIP",
     claimType: "Protocol Exploit",
-    amount: 300,
-    status: "Pending Investigation",
-    submittedDate: "2025-12-30",
-    reason: "Funds lost due to protocol exploit",
-    evidence: "Exploit report, transaction hashes",
-    investigationNote: "Waiting for protocol team response",
+    amount: 2500,
+    status: "Approved",
+    submittedDate: "2024-12-28",
+    resolvedDate: "2024-12-30",
+    reason:
+      "DeFi protocol exploit resulted in loss of funds during automated execution",
+    evidence:
+      "Exploit transaction: EQD4FPq-PRDieyQKkizFTRtSDyucUIqrj0v_zXJmqaDp6_0t",
+    payout: 2500,
+    token: "USDC",
   },
 ];
 
+const claimStats = {
+  totalClaims: 15,
+  approvedClaims: 12,
+  pendingClaims: 2,
+  rejectedClaims: 1,
+  totalPayouts: 125000,
+  averageProcessingTime: "18 hours",
+  successRate: 94.2,
+};
+
+const claimTypes = [
+  "Failed Transaction",
+  "Smart Contract Failure",
+  "Protocol Exploit",
+  "Network Congestion",
+  "Execution Bot Failure",
+  "Insufficient Liquidity",
+];
+
 export default function Claims() {
-  const [showClaimForm, setShowClaimForm] = useState(false);
-  const [claimForm, setClaimForm] = useState({
-    sipPlan: "",
+  const [newClaim, setNewClaim] = useState({
+    sipId: "",
     claimType: "",
     amount: "",
-    incidentDate: "",
-    description: "",
-    transactionHash: "",
+    reason: "",
     evidence: "",
+    token: "TON",
   });
 
   const handleSubmitClaim = () => {
-    console.log("Submitting claim:", claimForm);
-    // This would integrate with smart contracts and backend
-    setShowClaimForm(false);
-    setClaimForm({
-      sipPlan: "",
-      claimType: "",
-      amount: "",
-      incidentDate: "",
-      description: "",
-      transactionHash: "",
-      evidence: "",
-    });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Approved":
-        return "bg-green-500/10 text-green-400";
-      case "Under Review":
-        return "bg-yellow-500/10 text-yellow-400";
-      case "Rejected":
-        return "bg-red-500/10 text-red-400";
-      case "Pending Investigation":
-        return "bg-blue-500/10 text-blue-400";
-      default:
-        return "bg-gray-500/10 text-gray-400";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "Approved":
-        return <CheckCircle className="w-5 h-5 text-green-400" />;
-      case "Under Review":
-        return <Clock className="w-5 h-5 text-yellow-400" />;
-      case "Rejected":
-        return <XCircle className="w-5 h-5 text-red-400" />;
-      case "Pending Investigation":
-        return <AlertTriangle className="w-5 h-5 text-blue-400" />;
-      default:
-        return <FileText className="w-5 h-5 text-gray-400" />;
-    }
+    console.log("Submitting claim:", newClaim);
+    // This would integrate with smart contracts
   };
 
   return (
@@ -149,30 +123,29 @@ export default function Claims() {
 
       <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Insurance Claims</h1>
+            <h1 className="text-3xl font-bold ton-gradient-text mb-2">
+              Claims Management
+            </h1>
             <p className="text-muted-foreground">
-              Submit and track your insurance claims
+              Track and manage your insurance claims on TON blockchain
             </p>
           </div>
-          <Button
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium mt-4 sm:mt-0"
-            onClick={() => setShowClaimForm(true)}
-          >
+          <Button className="ton-button mt-4 sm:mt-0">
             <Plus className="w-4 h-4 mr-2" />
             File New Claim
           </Button>
         </div>
 
-        {/* Claims Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {/* Claims Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Card className="glass-card">
+            <Card className="ton-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Total Claims
@@ -180,8 +153,12 @@ export default function Claims() {
                 <FileText className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{recentClaims.length}</div>
-                <p className="text-xs text-muted-foreground">All time</p>
+                <div className="text-2xl font-bold">
+                  {claimStats.totalClaims}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  All time claims
+                </p>
               </CardContent>
             </Card>
           </motion.div>
@@ -191,19 +168,17 @@ export default function Claims() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <Card className="glass-card">
+            <Card className="ton-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Approved Claims
-                </CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Approved</CardTitle>
+                <CheckCircle className="h-4 w-4 text-green-400" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-400">
-                  {recentClaims.filter((c) => c.status === "Approved").length}
+                  {claimStats.approvedClaims}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Successfully paid
+                <p className="text-xs text-muted-foreground mt-1">
+                  {claimStats.successRate}% success rate
                 </p>
               </CardContent>
             </Card>
@@ -214,24 +189,18 @@ export default function Claims() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Card className="glass-card">
+            <Card className="ton-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Under Review
-                </CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Pending</CardTitle>
+                <Clock className="h-4 w-4 text-yellow-400" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-yellow-400">
-                  {
-                    recentClaims.filter(
-                      (c) =>
-                        c.status === "Under Review" ||
-                        c.status === "Pending Investigation"
-                    ).length
-                  }
+                  {claimStats.pendingClaims}
                 </div>
-                <p className="text-xs text-muted-foreground">Being processed</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Under review
+                </p>
               </CardContent>
             </Card>
           </motion.div>
@@ -241,7 +210,7 @@ export default function Claims() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Card className="glass-card">
+            <Card className="ton-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   Total Payouts
@@ -250,27 +219,26 @@ export default function Claims() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  $
-                  {recentClaims
-                    .filter((c) => c.payout)
-                    .reduce((sum, c) => sum + (c.payout || 0), 0)
-                    .toLocaleString()}
+                  ${claimStats.totalPayouts.toLocaleString()}
                 </div>
-                <p className="text-xs text-muted-foreground">Received</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Average: {claimStats.averageProcessingTime}
+                </p>
               </CardContent>
             </Card>
           </motion.div>
         </div>
 
         {/* Main Content */}
-        <Tabs defaultValue="claims" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:w-[300px]">
-            <TabsTrigger value="claims">My Claims</TabsTrigger>
-            <TabsTrigger value="process">Claims Process</TabsTrigger>
+        <Tabs defaultValue="recent" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+            <TabsTrigger value="recent">Recent Claims</TabsTrigger>
+            <TabsTrigger value="submit">Submit Claim</TabsTrigger>
+            <TabsTrigger value="history">Claim History</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="claims" className="space-y-6">
-            <div className="space-y-4">
+          <TabsContent value="recent" className="space-y-6">
+            <div className="grid gap-6">
               {recentClaims.map((claim, index) => (
                 <motion.div
                   key={claim.id}
@@ -278,107 +246,72 @@ export default function Claims() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  <Card className="glass-card hover:bg-card/70 transition-colors">
+                  <Card className="ton-card">
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                            {getStatusIcon(claim.status)}
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg">
-                              Claim {claim.id}
-                            </CardTitle>
-                            <CardDescription>
-                              {claim.sipName} • {claim.claimType}
-                            </CardDescription>
-                          </div>
+                        <div>
+                          <CardTitle className="flex items-center">
+                            {claim.sipName}
+                            <Badge className="ml-2 ton-badge">
+                              {claim.token}
+                            </Badge>
+                          </CardTitle>
+                          <CardDescription>
+                            Claim ID: {claim.id}
+                          </CardDescription>
                         </div>
-                        <div className="text-right">
-                          <div className="text-xl font-bold">
-                            ${claim.amount}
-                          </div>
-                          <Badge className={getStatusColor(claim.status)}>
-                            {claim.status}
-                          </Badge>
-                        </div>
+                        <Badge
+                          className={
+                            claim.status === "Approved"
+                              ? "ton-status-success"
+                              : claim.status === "Under Review"
+                              ? "ton-status-warning"
+                              : "ton-status-error"
+                          }
+                        >
+                          {claim.status}
+                        </Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid md:grid-cols-2 gap-4 mb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <p className="text-sm text-muted-foreground">
-                            Reason
+                          <p className="text-sm font-medium mb-2">
+                            Claim Details
                           </p>
-                          <p className="text-sm">{claim.reason}</p>
+                          <div className="space-y-1 text-sm text-muted-foreground">
+                            <p>
+                              <strong>Type:</strong> {claim.claimType}
+                            </p>
+                            <p>
+                              <strong>Amount:</strong> ${claim.amount}{" "}
+                              {claim.token}
+                            </p>
+                            <p>
+                              <strong>Submitted:</strong> {claim.submittedDate}
+                            </p>
+                            {claim.resolvedDate && (
+                              <p>
+                                <strong>Resolved:</strong> {claim.resolvedDate}
+                              </p>
+                            )}
+                          </div>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">
-                            Evidence
+                          <p className="text-sm font-medium mb-2">Reason</p>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            {claim.reason}
                           </p>
-                          <p className="text-sm">{claim.evidence}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            Submitted
-                          </p>
-                          <p className="text-sm">
-                            {new Date(claim.submittedDate).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">
-                            {claim.status === "Approved" ||
-                            claim.status === "Rejected"
-                              ? "Resolved"
-                              : claim.status === "Under Review"
-                              ? "Review Deadline"
-                              : "Status"}
-                          </p>
-                          <p className="text-sm">
-                            {claim.resolvedDate
-                              ? new Date(
-                                  claim.resolvedDate
-                                ).toLocaleDateString()
-                              : claim.reviewDeadline
-                              ? new Date(
-                                  claim.reviewDeadline
-                                ).toLocaleDateString()
-                              : claim.investigationNote || "In progress"}
+                          <p className="text-sm font-medium mb-1">Evidence</p>
+                          <p className="text-xs text-muted-foreground font-mono">
+                            {claim.evidence}
                           </p>
                         </div>
                       </div>
-
-                      {claim.status === "Approved" && claim.payout && (
-                        <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-                          <p className="text-sm text-green-400 font-medium">
-                            ✓ Claim approved - ${claim.payout} paid to your
-                            wallet
-                          </p>
-                        </div>
-                      )}
-
-                      {claim.status === "Rejected" && claim.rejectionReason && (
-                        <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                          <p className="text-sm text-red-400 font-medium">
-                            ✗ Claim rejected: {claim.rejectionReason}
-                          </p>
-                        </div>
-                      )}
-
-                      {claim.status === "Under Review" && (
-                        <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                          <p className="text-sm text-yellow-400 font-medium">
-                            ⏳ Under DAO review - Decision expected by{" "}
-                            {claim.reviewDeadline}
-                          </p>
-                        </div>
-                      )}
-
-                      {claim.status === "Pending Investigation" && (
-                        <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                          <p className="text-sm text-blue-400 font-medium">
-                            🔍 {claim.investigationNote}
+                      {claim.payout && (
+                        <div className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+                          <p className="text-sm font-medium text-green-400">
+                            Payout: ${claim.payout} {claim.token}
                           </p>
                         </div>
                       )}
@@ -389,287 +322,152 @@ export default function Claims() {
             </div>
           </TabsContent>
 
-          <TabsContent value="process" className="space-y-6">
-            <Card className="glass-card">
+          <TabsContent value="submit" className="space-y-6">
+            <Card className="ton-card">
               <CardHeader>
-                <CardTitle>Claims Process</CardTitle>
+                <CardTitle>Submit New Claim</CardTitle>
                 <CardDescription>
-                  How insurance claims are reviewed and processed
+                  File a claim for your insured SIP on TON blockchain
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-4 gap-6">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <FileText className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="font-semibold mb-2">1. Submit Claim</h3>
-                    <p className="text-sm text-muted-foreground">
-                      File your claim with detailed information and supporting
-                      evidence
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="sipId">SIP ID</Label>
+                    <Select
+                      value={newClaim.sipId}
+                      onValueChange={(value) =>
+                        setNewClaim({ ...newClaim, sipId: value })
+                      }
+                    >
+                      <SelectTrigger className="ton-input">
+                        <SelectValue placeholder="Select your SIP" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sip-1">TON Staking SIP</SelectItem>
+                        <SelectItem value="sip-2">USDT Lending SIP</SelectItem>
+                        <SelectItem value="sip-3">USDC DeFi SIP</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <AlertTriangle className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="font-semibold mb-2">2. Initial Review</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Automated checks and initial validation of claim details
-                    </p>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="claimType">Claim Type</Label>
+                    <Select
+                      value={newClaim.claimType}
+                      onValueChange={(value) =>
+                        setNewClaim({ ...newClaim, claimType: value })
+                      }
+                    >
+                      <SelectTrigger className="ton-input">
+                        <SelectValue placeholder="Select claim type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {claimTypes.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Clock className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="font-semibold mb-2">3. DAO Review</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Community governance review and voting on claim approval
-                    </p>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="amount">Claim Amount</Label>
+                    <Input
+                      id="amount"
+                      type="number"
+                      placeholder="Enter amount"
+                      value={newClaim.amount}
+                      onChange={(e) =>
+                        setNewClaim({ ...newClaim, amount: e.target.value })
+                      }
+                      className="ton-input"
+                    />
                   </div>
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="font-semibold mb-2">4. Resolution</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Approved claims are paid automatically to your wallet
-                    </p>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="token">Token</Label>
+                    <Select
+                      value={newClaim.token}
+                      onValueChange={(value) =>
+                        setNewClaim({ ...newClaim, token: value })
+                      }
+                    >
+                      <SelectTrigger className="ton-input">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="TON">TON</SelectItem>
+                        <SelectItem value="USDT">USDT</SelectItem>
+                        <SelectItem value="USDC">USDC</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
-                <div className="border-t border-border pt-6">
-                  <h4 className="font-semibold mb-4">Required Documentation</h4>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <h5 className="font-medium mb-2 text-green-400">
-                        Always Required:
-                      </h5>
-                      <ul className="space-y-1 text-sm text-muted-foreground">
-                        <li>• Detailed description of the incident</li>
-                        <li>• Date and time of occurrence</li>
-                        <li>• SIP plan affected</li>
-                        <li>• Expected vs actual behavior</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h5 className="font-medium mb-2 text-blue-400">
-                        When Applicable:
-                      </h5>
-                      <ul className="space-y-1 text-sm text-muted-foreground">
-                        <li>• Transaction hashes</li>
-                        <li>• Error messages or logs</li>
-                        <li>• Protocol announcements</li>
-                        <li>• Screenshots or additional evidence</li>
-                      </ul>
-                    </div>
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="reason">Reason for Claim</Label>
+                  <Textarea
+                    id="reason"
+                    placeholder="Describe what happened and why you're filing this claim..."
+                    value={newClaim.reason}
+                    onChange={(e) =>
+                      setNewClaim({ ...newClaim, reason: e.target.value })
+                    }
+                    className="ton-input min-h-[100px]"
+                  />
                 </div>
 
-                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
-                  <h4 className="font-semibold text-yellow-400 mb-2">
-                    Review Timeline
-                  </h4>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>• Initial validation: 24-48 hours</li>
-                    <li>• DAO review period: 3-7 days</li>
-                    <li>• Complex cases: Up to 14 days</li>
-                    <li>• Payout processing: 1-2 days after approval</li>
-                  </ul>
+                <div className="space-y-2">
+                  <Label htmlFor="evidence">Evidence</Label>
+                  <Textarea
+                    id="evidence"
+                    placeholder="Provide transaction hashes, contract addresses, or other evidence..."
+                    value={newClaim.evidence}
+                    onChange={(e) =>
+                      setNewClaim({ ...newClaim, evidence: e.target.value })
+                    }
+                    className="ton-input min-h-[100px]"
+                  />
+                </div>
+
+                <Button
+                  onClick={handleSubmitClaim}
+                  className="ton-button w-full"
+                  disabled={
+                    !newClaim.sipId ||
+                    !newClaim.claimType ||
+                    !newClaim.amount ||
+                    !newClaim.reason
+                  }
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Submit Claim
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="history" className="space-y-6">
+            <Card className="ton-card">
+              <CardHeader>
+                <CardTitle>Complete Claim History</CardTitle>
+                <CardDescription>
+                  View all your claims and their processing status
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">
+                    Complete claim history will be displayed here
+                  </p>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
-
-        {/* Claim Form Modal */}
-        {showClaimForm && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto"
-            >
-              <Card className="glass-card">
-                <CardHeader>
-                  <CardTitle>File Insurance Claim</CardTitle>
-                  <CardDescription>
-                    Submit a claim for your SIP investment loss
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="sipPlan">Affected SIP Plan</Label>
-                      <Select
-                        onValueChange={(value) =>
-                          setClaimForm({ ...claimForm, sipPlan: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select SIP plan" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="usdc-staking">
-                            USDC Staking SIP
-                          </SelectItem>
-                          <SelectItem value="sol-dca">SOL DCA Plan</SelectItem>
-                          <SelectItem value="mixed-strategy">
-                            Mixed Strategy SIP
-                          </SelectItem>
-                          <SelectItem value="conservative-usdt">
-                            Conservative USDT
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="claimType">Type of Issue</Label>
-                      <Select
-                        onValueChange={(value) =>
-                          setClaimForm({ ...claimForm, claimType: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select issue type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="failed-execution">
-                            Failed Execution
-                          </SelectItem>
-                          <SelectItem value="smart-contract">
-                            Smart Contract Issue
-                          </SelectItem>
-                          <SelectItem value="protocol-exploit">
-                            Protocol Exploit
-                          </SelectItem>
-                          <SelectItem value="bot-failure">
-                            Execution Bot Failure
-                          </SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="amount">Claim Amount ($)</Label>
-                      <Input
-                        id="amount"
-                        type="number"
-                        placeholder="500"
-                        value={claimForm.amount}
-                        onChange={(e) =>
-                          setClaimForm({ ...claimForm, amount: e.target.value })
-                        }
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="incidentDate">Date of Incident</Label>
-                      <Input
-                        id="incidentDate"
-                        type="date"
-                        value={claimForm.incidentDate}
-                        onChange={(e) =>
-                          setClaimForm({
-                            ...claimForm,
-                            incidentDate: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="transactionHash">
-                      Transaction Hash (if applicable)
-                    </Label>
-                    <Input
-                      id="transactionHash"
-                      placeholder="5KJp7z..."
-                      value={claimForm.transactionHash}
-                      onChange={(e) =>
-                        setClaimForm({
-                          ...claimForm,
-                          transactionHash: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="description">Detailed Description</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Describe what happened, what you expected to happen, and any relevant details..."
-                      rows={4}
-                      value={claimForm.description}
-                      onChange={(e) =>
-                        setClaimForm({
-                          ...claimForm,
-                          description: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="evidence">Supporting Evidence</Label>
-                    <Textarea
-                      id="evidence"
-                      placeholder="List any supporting evidence: error messages, screenshots, protocol announcements, etc."
-                      rows={3}
-                      value={claimForm.evidence}
-                      onChange={(e) =>
-                        setClaimForm({ ...claimForm, evidence: e.target.value })
-                      }
-                    />
-                  </div>
-
-                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <Shield className="w-5 h-5 text-blue-400 mt-0.5" />
-                      <div className="text-sm">
-                        <p className="font-medium text-blue-400 mb-1">
-                          Claim Review Process
-                        </p>
-                        <p className="text-muted-foreground">
-                          Your claim will be reviewed by our DAO governance
-                          system. Initial validation takes 24-48 hours, followed
-                          by community review. You'll receive updates via email
-                          and can track progress in your dashboard.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2 pt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowClaimForm(false)}
-                      className="flex-1"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleSubmitClaim}
-                      className="flex-1 bg-primary hover:bg-primary/90"
-                      disabled={
-                        !claimForm.sipPlan ||
-                        !claimForm.claimType ||
-                        !claimForm.amount ||
-                        !claimForm.description
-                      }
-                    >
-                      Submit Claim
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        )}
       </div>
     </div>
   );

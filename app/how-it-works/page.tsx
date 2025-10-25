@@ -3,22 +3,26 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
+  Play,
+  Pause,
   ArrowRight,
-  Clock,
-  DollarSign,
-  TrendingUp,
-  Shield,
-  Settings,
-  Repeat,
-  PiggyBank,
   CheckCircle,
-  ArrowDown,
+  Shield,
   Zap,
-  Target,
+  DollarSign,
+  Clock,
+  TrendingUp,
+  Users,
   BarChart3,
-  Layers,
+  FileText,
+  Smartphone,
   Globe,
   Lock,
+  Target,
+  Activity,
+  PieChart,
+  ArrowDown,
+  ArrowUp,
 } from "lucide-react";
 import {
   Card,
@@ -33,843 +37,502 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigation } from "@/components/navigation";
 import Link from "next/link";
 
+const steps = [
+  {
+    id: 1,
+    title: "Connect Your TON Wallet",
+    description: "Securely connect your TON wallet using TonConnect protocol",
+    icon: Smartphone,
+    details: [
+      "Connect via Tonkeeper, OpenMask, or other TON wallets",
+      "Your wallet remains secure - we never access your private keys",
+      "Real-time balance and transaction monitoring",
+    ],
+  },
+  {
+    id: 2,
+    title: "Create Your SIP Plan",
+    description:
+      "Set up your systematic investment plan with TON ecosystem tokens",
+    icon: Target,
+    details: [
+      "Choose from TON, USDT, or USDC",
+      "Set investment amount and frequency",
+      "Select from staking, lending, or DeFi strategies",
+      "Optional insurance protection for added security",
+    ],
+  },
+  {
+    id: 3,
+    title: "Automated Execution",
+    description: "Our smart contracts automatically execute your investments",
+    icon: Zap,
+    details: [
+      "Smart contracts handle all transactions",
+      "Integration with TON DeFi protocols",
+      "Real-time market analysis and optimization",
+      "Instant notifications and updates",
+    ],
+  },
+  {
+    id: 4,
+    title: "Track & Optimize",
+    description: "Monitor performance and optimize your investment strategy",
+    icon: BarChart3,
+    details: [
+      "Real-time portfolio tracking",
+      "Performance analytics and insights",
+      "Automatic strategy optimization",
+      "Easy SIP management and adjustments",
+    ],
+  },
+];
+
+const features = [
+  {
+    title: "TON Ecosystem Integration",
+    description:
+      "Built specifically for TON blockchain with native token support",
+    icon: Globe,
+    benefits: [
+      "Native TON token support",
+      "Integration with TON DeFi protocols",
+      "Optimized for TON network performance",
+      "Low transaction fees",
+    ],
+  },
+  {
+    title: "Smart Contract Security",
+    description: "Audited smart contracts ensure your funds are always secure",
+    icon: Shield,
+    benefits: [
+      "Audited by leading security firms",
+      "Multi-signature wallet protection",
+      "Insurance coverage available",
+      "Transparent contract code",
+    ],
+  },
+  {
+    title: "Automated Strategies",
+    description: "AI-powered investment strategies optimized for TON ecosystem",
+    icon: Activity,
+    benefits: [
+      "Dynamic strategy adjustment",
+      "Market condition analysis",
+      "Risk management protocols",
+      "Yield optimization algorithms",
+    ],
+  },
+  {
+    title: "Human-Readable Interface",
+    description:
+      "Simple, intuitive interface following TON ecosystem standards",
+    icon: FileText,
+    benefits: [
+      "Clear transaction descriptions",
+      "Instant feedback on all actions",
+      "Educational content and guidance",
+      "Mobile-first responsive design",
+    ],
+  },
+];
+
+const strategies = [
+  {
+    name: "TON Staking",
+    description: "Stake TON tokens for network security and earn rewards",
+    apy: "8.5%",
+    risk: "Low",
+    minAmount: "100 TON",
+    features: [
+      "Network security participation",
+      "Regular reward distribution",
+      "Low risk",
+      "TON ecosystem support",
+    ],
+  },
+  {
+    name: "USDT Lending",
+    description: "Lend USDT on TON DeFi protocols for stable returns",
+    apy: "12.3%",
+    risk: "Medium",
+    minAmount: "50 USDT",
+    features: [
+      "Stable returns",
+      "Liquidity provision",
+      "DeFi protocol integration",
+      "Flexible terms",
+    ],
+  },
+  {
+    name: "USDC DeFi",
+    description: "Advanced DeFi strategies with USDC on TON ecosystem",
+    apy: "15.7%",
+    risk: "High",
+    minAmount: "100 USDC",
+    features: [
+      "High yield potential",
+      "Advanced strategies",
+      "Liquidity mining",
+      "Protocol farming",
+    ],
+  },
+];
+
+const faqs = [
+  {
+    question: "How does Siphere work with TON blockchain?",
+    answer:
+      "Siphere is built specifically for the TON ecosystem, using native TON tokens and integrating with TON DeFi protocols. Our smart contracts are deployed on TON blockchain and use TonConnect for secure wallet integration.",
+  },
+  {
+    question: "What tokens can I invest with?",
+    answer:
+      "You can invest using TON (native token), USDT, or USDC. All tokens are supported on the TON blockchain and integrated with our DeFi protocols.",
+  },
+  {
+    question: "How secure are my investments?",
+    answer:
+      "Your investments are protected by audited smart contracts, multi-signature wallets, and optional insurance coverage. We follow TON ecosystem security standards and best practices.",
+  },
+  {
+    question: "Can I withdraw my funds anytime?",
+    answer:
+      "Yes, you can pause or withdraw from your SIP plans at any time. However, some DeFi strategies may have lock-up periods for optimal returns.",
+  },
+  {
+    question: "What are the fees?",
+    answer:
+      "Siphere charges a small management fee (typically 0.5-1%) on your returns. TON network transaction fees are minimal and paid separately.",
+  },
+];
+
 export default function HowItWorks() {
-  const [activeStep, setActiveStep] = useState(0);
-
-  const steps = [
-    {
-      title: "Set Your SIP",
-      description: "Configure your investment parameters",
-      icon: Settings,
-      color: "text-blue-400",
-      details: [
-        "Choose your preferred token (USDC, USDT, SOL)",
-        "Set investment amount per interval",
-        "Select frequency (daily, weekly, bi-weekly, monthly)",
-        "Pick your DeFi strategy (staking, lending, or hybrid)",
-      ],
-    },
-    {
-      title: "Auto Invest",
-      description: "Automated execution at scheduled intervals",
-      icon: Repeat,
-      color: "text-primary",
-      details: [
-        "Smart contracts automatically execute investments",
-        "Funds are deployed to selected DeFi protocols",
-        "Dollar-cost averaging reduces volatility impact",
-        "No manual intervention required",
-      ],
-    },
-    {
-      title: "Earn + Insure",
-      description: "Generate yield with optional protection",
-      icon: PiggyBank,
-      color: "text-green-400",
-      details: [
-        "Earn passive yield from staking and lending",
-        "Optional insurance protects against protocol failures",
-        "Transparent tracking of all transactions",
-        "Withdraw or compound earnings anytime",
-      ],
-    },
-  ];
-
-  const strategies = [
-    {
-      name: "Staking Strategy",
-      description: "Stake SOL with Marinade Finance for liquid staking rewards",
-      apy: "7-9%",
-      risk: "Low",
-      protocols: ["Marinade Finance", "Lido", "Jito"],
-      icon: Lock,
-      color: "from-blue-500/20 to-blue-600/20",
-    },
-    {
-      name: "Lending Strategy",
-      description: "Lend stablecoins on Solend for stable yields",
-      apy: "5-8%",
-      risk: "Low",
-      protocols: ["Solend", "Mango Markets", "Tulip Protocol"],
-      icon: DollarSign,
-      color: "from-green-500/20 to-green-600/20",
-    },
-    {
-      name: "Hybrid Strategy",
-      description: "Split between staking and lending for balanced returns",
-      apy: "6-10%",
-      risk: "Medium",
-      protocols: ["Multiple Protocols", "Auto-Rebalancing"],
-      icon: BarChart3,
-      color: "from-purple-500/20 to-purple-600/20",
-    },
-  ];
+  const [activeStep, setActiveStep] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <div className="min-h-screen">
       <Navigation />
 
-      <div className="pt-20">
-        {/* Hero Section */}
-        <section className="py-24 bg-gradient-to-br from-background via-muted/20 to-background">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <Badge
-                variant="secondary"
-                className="mb-6 bg-primary/10 text-primary border-primary/20"
+      <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-4xl sm:text-5xl font-bold ton-gradient-text mb-6">
+              How Siphere Works
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+              Learn how Siphere automates your investments on the TON blockchain
+              with smart contracts, DeFi strategies, and human-readable
+              interfaces.
+            </p>
+            <div className="flex justify-center">
+              <Button
+                className="ton-button"
+                onClick={() => setIsPlaying(!isPlaying)}
               >
-                <Target className="w-4 h-4 mr-2" />
-                Complete Guide
-              </Badge>
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                How Siphere
-                <span className="gradient-text block">Works</span>
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Discover the complete process of automated DeFi investing with
-                systematic investment plans, from setup to yield generation with
-                optional insurance protection.
-              </p>
-            </motion.div>
+                {isPlaying ? (
+                  <Pause className="w-4 h-4 mr-2" />
+                ) : (
+                  <Play className="w-4 h-4 mr-2" />
+                )}
+                {isPlaying ? "Pause" : "Play"} Demo
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Steps Section */}
+        <motion.section
+          className="mb-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Simple 4-Step Process</h2>
+            <p className="text-muted-foreground">
+              Get started with automated investing in minutes
+            </p>
           </div>
-        </section>
 
-        {/* Interactive Steps Section */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Three Simple Steps
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                Your journey to automated crypto investing
-              </p>
-            </motion.div>
-
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Step Navigation */}
-              <div className="space-y-6">
-                {steps.map((step, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <Card
-                      className={`glass-card cursor-pointer transition-all duration-300 ${
-                        activeStep === index
-                          ? "border-primary/50 bg-primary/5"
-                          : "hover:border-primary/30"
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Steps List */}
+            <div className="space-y-6">
+              {steps.map((step, index) => (
+                <motion.div
+                  key={step.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className={`p-6 rounded-xl transition-all duration-300 cursor-pointer ${
+                    activeStep === step.id
+                      ? "ton-card border-primary/50"
+                      : "glass-card hover:border-primary/30"
+                  }`}
+                  onClick={() => setActiveStep(step.id)}
+                >
+                  <div className="flex items-start space-x-4">
+                    <div
+                      className={`p-3 rounded-lg ${
+                        activeStep === step.id
+                          ? "bg-primary/20 text-primary"
+                          : "bg-muted text-muted-foreground"
                       }`}
-                      onClick={() => setActiveStep(index)}
                     >
-                      <CardHeader>
-                        <div className="flex items-center space-x-4">
-                          <div
-                            className={`w-12 h-12 rounded-full bg-gradient-to-br ${
-                              activeStep === index
-                                ? "from-primary/30 to-primary/50"
-                                : "from-muted/30 to-muted/50"
-                            } flex items-center justify-center`}
-                          >
-                            <step.icon
-                              className={`w-6 h-6 ${
-                                activeStep === index
-                                  ? "text-primary"
-                                  : step.color
-                              }`}
-                            />
-                          </div>
-                          <div>
-                            <CardTitle className="text-xl">
-                              {step.title}
-                            </CardTitle>
-                            <CardDescription>
-                              {step.description}
-                            </CardDescription>
-                          </div>
-                        </div>
-                      </CardHeader>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Step Details */}
-              <motion.div
-                key={activeStep}
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="lg:sticky lg:top-24"
-              >
-                <Card className="glass-card border-2 border-primary/20">
-                  <CardHeader>
-                    <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/30 to-primary/50 flex items-center justify-center">
-                        {React.createElement(steps[activeStep].icon, {
-                          className: `w-8 h-8 text-primary`,
-                        })}
-                      </div>
-                      <div>
-                        <CardTitle className="text-2xl">
-                          {steps[activeStep].title}
-                        </CardTitle>
-                        <CardDescription className="text-lg">
-                          {steps[activeStep].description}
-                        </CardDescription>
-                      </div>
+                      <step.icon className="w-6 h-6" />
                     </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-2">
+                        {step.title}
+                      </h3>
+                      <p className="text-muted-foreground mb-3">
+                        {step.description}
+                      </p>
+                      <ul className="space-y-1">
+                        {step.details.map((detail, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-center text-sm text-muted-foreground"
+                          >
+                            <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                            {detail}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Visual Representation */}
+            <div className="flex items-center justify-center">
+              <motion.div
+                className="relative w-full max-w-md"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <div className="bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl p-8 text-center">
+                  <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    {React.createElement(steps[activeStep - 1].icon, {
+                      className: "w-12 h-12 text-primary",
+                    })}
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Step {activeStep}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {steps[activeStep - 1].title}
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Features Section */}
+        <motion.section
+          className="mb-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Key Features</h2>
+            <p className="text-muted-foreground">
+              Built for the TON ecosystem with cutting-edge technology
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="ton-card h-full">
+                  <CardHeader>
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="p-3 bg-primary/20 rounded-lg">
+                        <feature.icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <CardTitle className="text-xl">{feature.title}</CardTitle>
+                    </div>
+                    <CardDescription className="text-base">
+                      {feature.description}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-4">
-                      {steps[activeStep].details.map((detail, index) => (
-                        <motion.li
-                          key={index}
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.4, delay: index * 0.1 }}
-                          className="flex items-start space-x-3"
-                        >
-                          <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-muted-foreground">
-                            {detail}
-                          </span>
-                        </motion.li>
+                    <ul className="space-y-2">
+                      {feature.benefits.map((benefit, idx) => (
+                        <li key={idx} className="flex items-center text-sm">
+                          <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                          {benefit}
+                        </li>
                       ))}
                     </ul>
                   </CardContent>
                 </Card>
               </motion.div>
-            </div>
+            ))}
           </div>
-        </section>
+        </motion.section>
 
-        {/* Investment Strategies Section */}
-        <section className="py-24 bg-muted/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Investment Strategies
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                Choose the strategy that fits your risk tolerance and goals
-              </p>
-            </motion.div>
+        {/* Investment Strategies */}
+        <motion.section
+          className="mb-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Investment Strategies</h2>
+            <p className="text-muted-foreground">
+              Choose from various DeFi strategies optimized for TON ecosystem
+            </p>
+          </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {strategies.map((strategy, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -5 }}
-                >
-                  <Card className="glass-card hover:bg-card/70 transition-all duration-300 h-full border-2 hover:border-primary/30">
-                    <CardHeader>
-                      <div
-                        className={`w-16 h-16 rounded-xl bg-gradient-to-br ${strategy.color} flex items-center justify-center mb-4`}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {strategies.map((strategy, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="ton-card h-full">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-4">
+                      <CardTitle className="text-lg">{strategy.name}</CardTitle>
+                      <Badge
+                        className={
+                          strategy.risk === "Low"
+                            ? "ton-status-success"
+                            : strategy.risk === "Medium"
+                            ? "ton-status-warning"
+                            : "ton-status-error"
+                        }
                       >
-                        <strategy.icon className="w-8 h-8 text-primary" />
-                      </div>
-                      <CardTitle className="text-xl mb-2">
-                        {strategy.name}
-                      </CardTitle>
-                      <CardDescription className="text-base">
-                        {strategy.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-muted-foreground">
-                            Expected APY:
-                          </span>
-                          <Badge
-                            variant="secondary"
-                            className="bg-green-500/10 text-green-400"
-                          >
-                            {strategy.apy}
-                          </Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-muted-foreground">
-                            Risk Level:
-                          </span>
-                          <Badge
-                            variant={
-                              strategy.risk === "Low" ? "secondary" : "outline"
-                            }
-                          >
-                            {strategy.risk}
-                          </Badge>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground text-sm">
-                            Protocols:
-                          </span>
-                          <div className="mt-2 space-y-1">
-                            {strategy.protocols.map(
-                              (protocol, protocolIndex) => (
-                                <div
-                                  key={protocolIndex}
-                                  className="text-sm bg-muted/20 px-2 py-1 rounded"
-                                >
-                                  {protocol}
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* SIP Lifecycle Section */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                SIP Lifecycle
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                From creation to yield generation - the complete journey
-              </p>
-            </motion.div>
-
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary via-green-400 to-blue-400 rounded-full hidden lg:block" />
-
-              <div className="space-y-16">
-                {[
-                  {
-                    title: "SIP Creation",
-                    description:
-                      "Set up your investment parameters and preferences",
-                    icon: Settings,
-                    color: "text-blue-400",
-                    details: [
-                      "Choose token and amount",
-                      "Set frequency",
-                      "Select strategy",
-                      "Enable insurance (optional)",
-                    ],
-                    position: "left",
-                  },
-                  {
-                    title: "Smart Contract Deployment",
-                    description: "Your SIP is deployed to the blockchain",
-                    icon: Layers,
-                    color: "text-purple-400",
-                    details: [
-                      "Contract verification",
-                      "Initial deposit",
-                      "Schedule activation",
-                      "Security checks",
-                    ],
-                    position: "right",
-                  },
-                  {
-                    title: "Automated Execution",
-                    description: "Regular investments happen automatically",
-                    icon: Repeat,
-                    color: "text-primary",
-                    details: [
-                      "Scheduled investments",
-                      "Protocol integration",
-                      "Transaction logging",
-                      "Yield accumulation",
-                    ],
-                    position: "left",
-                  },
-                  {
-                    title: "Yield Generation",
-                    description: "Your investments start earning returns",
-                    icon: TrendingUp,
-                    color: "text-green-400",
-                    details: [
-                      "Staking rewards",
-                      "Lending interest",
-                      "Compound growth",
-                      "Real-time tracking",
-                    ],
-                    position: "right",
-                  },
-                  {
-                    title: "Insurance Protection",
-                    description: "Optional coverage against protocol risks",
-                    icon: Shield,
-                    color: "text-yellow-400",
-                    details: [
-                      "Premium collection",
-                      "Risk monitoring",
-                      "Claim processing",
-                      "DAO governance",
-                    ],
-                    position: "left",
-                  },
-                ].map((phase, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{
-                      opacity: 0,
-                      x: phase.position === "left" ? -50 : 50,
-                    }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.2 }}
-                    viewport={{ once: true }}
-                    className={`flex items-center ${
-                      phase.position === "right" ? "lg:flex-row-reverse" : ""
-                    }`}
-                  >
-                    <div
-                      className={`lg:w-1/2 ${
-                        phase.position === "right" ? "lg:pl-16" : "lg:pr-16"
-                      }`}
-                    >
-                      <Card className="glass-card border-2 hover:border-primary/30 transition-colors">
-                        <CardHeader>
-                          <div className="flex items-center space-x-4">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center">
-                              <phase.icon
-                                className={`w-6 h-6 ${phase.color}`}
-                              />
-                            </div>
-                            <div>
-                              <CardTitle className="text-xl">
-                                {phase.title}
-                              </CardTitle>
-                              <CardDescription>
-                                {phase.description}
-                              </CardDescription>
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="space-y-2">
-                            {phase.details.map((detail, detailIndex) => (
-                              <li
-                                key={detailIndex}
-                                className="flex items-center space-x-2 text-sm text-muted-foreground"
-                              >
-                                <CheckCircle className="w-4 h-4 text-green-400" />
-                                <span>{detail}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </CardContent>
-                      </Card>
+                        {strategy.risk} Risk
+                      </Badge>
                     </div>
-
-                    {/* Timeline Node */}
-                    <div className="hidden lg:block relative">
-                      <div className="w-6 h-6 bg-primary rounded-full border-4 border-background shadow-lg" />
+                    <CardDescription>{strategy.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">APY</span>
+                        <span className="text-lg font-bold text-green-400">
+                          {strategy.apy}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Min Amount</span>
+                        <span className="text-sm text-muted-foreground">
+                          {strategy.minAmount}
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium">Features:</p>
+                        <ul className="space-y-1">
+                          {strategy.features.map((feature, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-center text-xs text-muted-foreground"
+                            >
+                              <CheckCircle className="w-3 h-3 text-green-400 mr-2 flex-shrink-0" />
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-
-                    <div className="lg:w-1/2" />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
-        </section>
+        </motion.section>
 
-        {/* Technical Details Section */}
-        <section className="py-24 bg-muted/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Technical Architecture
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                Built on Solana for speed, security, and low costs
-              </p>
-            </motion.div>
-
-            <Tabs defaultValue="smart-contracts" className="space-y-8">
-              <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 lg:w-[600px] mx-auto">
-                <TabsTrigger value="smart-contracts">
-                  Smart Contracts
-                </TabsTrigger>
-                <TabsTrigger value="automation">Automation</TabsTrigger>
-                <TabsTrigger value="security">Security</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="smart-contracts" className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <Card className="glass-card">
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Layers className="w-6 h-6 mr-3 text-primary" />
-                        Smart Contract Architecture
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div>
-                          <h4 className="font-semibold mb-4 text-primary">
-                            Core Contracts
-                          </h4>
-                          <ul className="space-y-3">
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">SIP Manager</div>
-                                <div className="text-sm text-muted-foreground">
-                                  Handles SIP creation, execution, and
-                                  management
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Strategy Router
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Routes funds to appropriate DeFi protocols
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Insurance Vault
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Manages insurance premiums and claims
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold mb-4 text-green-400">
-                            Protocol Integrations
-                          </h4>
-                          <ul className="space-y-3">
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Marinade Finance
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Liquid staking for SOL
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Solend Protocol
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Lending and borrowing
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Jupiter Exchange
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Token swaps and routing
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </TabsContent>
-
-              <TabsContent value="automation" className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <Card className="glass-card">
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Zap className="w-6 h-6 mr-3 text-primary" />
-                        Automation Engine
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div>
-                          <h4 className="font-semibold mb-4 text-primary">
-                            Execution System
-                          </h4>
-                          <ul className="space-y-3">
-                            <li className="flex items-start space-x-3">
-                              <Clock className="w-5 h-5 text-blue-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Scheduled Execution
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Precise timing based on user preferences
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <Globe className="w-5 h-5 text-blue-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Decentralized Keepers
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Multiple nodes ensure reliability
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <Target className="w-5 h-5 text-blue-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Gas Optimization
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Minimal transaction costs
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold mb-4 text-green-400">
-                            Monitoring & Alerts
-                          </h4>
-                          <ul className="space-y-3">
-                            <li className="flex items-start space-x-3">
-                              <BarChart3 className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Real-time Monitoring
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  24/7 system health checks
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <Shield className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Failure Detection
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Automatic retry mechanisms
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Success Notifications
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Instant execution confirmations
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </TabsContent>
-
-              <TabsContent value="security" className="space-y-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <Card className="glass-card">
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Shield className="w-6 h-6 mr-3 text-primary" />
-                        Security Measures
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div>
-                          <h4 className="font-semibold mb-4 text-primary">
-                            Smart Contract Security
-                          </h4>
-                          <ul className="space-y-3">
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">Audited Code</div>
-                                <div className="text-sm text-muted-foreground">
-                                  Third-party security audits
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Multi-sig Controls
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Distributed key management
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Upgrade Mechanisms
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Secure protocol updates
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold mb-4 text-yellow-400">
-                            Insurance Coverage
-                          </h4>
-                          <ul className="space-y-3">
-                            <li className="flex items-start space-x-3">
-                              <Shield className="w-5 h-5 text-yellow-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Protocol Failures
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Smart contract exploits
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <Shield className="w-5 h-5 text-yellow-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  Execution Failures
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Missed investments
-                                </div>
-                              </div>
-                            </li>
-                            <li className="flex items-start space-x-3">
-                              <Shield className="w-5 h-5 text-yellow-400 mt-0.5" />
-                              <div>
-                                <div className="font-medium">
-                                  DAO Governance
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  Community-driven claims
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </TabsContent>
-            </Tabs>
+        {/* FAQ Section */}
+        <motion.section
+          className="mb-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-muted-foreground">
+              Everything you need to know about Siphere
+            </p>
           </div>
-        </section>
+
+          <div className="max-w-3xl mx-auto space-y-6">
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="ton-card">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{faq.question}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{faq.answer}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
 
         {/* CTA Section */}
-        <section className="py-24">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Ready to Start Your SIP?
+        <motion.section
+          className="text-center py-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+        >
+          <Card className="ton-card max-w-2xl mx-auto">
+            <CardContent className="py-12">
+              <h2 className="text-3xl font-bold mb-4 ton-gradient-text">
+                Ready to Start Your SIP Journey?
               </h2>
-              <p className="text-xl text-muted-foreground mb-8">
-                Join thousands of investors already using Siphere for automated
-                DeFi investing
+              <p className="text-muted-foreground mb-8">
+                Join thousands of users already building wealth systematically
+                on TON blockchain
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                <Button className="ton-button" size="lg">
                   <Link href="/create-sip" className="flex items-center">
                     Create Your First SIP
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline">
+                <Button variant="outline" size="lg">
                   <Link href="/dashboard" className="flex items-center">
                     View Dashboard
-                    <BarChart3 className="ml-2 h-5 w-5" />
+                    <BarChart3 className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
               </div>
-            </motion.div>
-          </div>
-        </section>
+            </CardContent>
+          </Card>
+        </motion.section>
       </div>
     </div>
   );

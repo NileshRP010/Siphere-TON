@@ -44,6 +44,19 @@ const portfolioData = {
   returnPercentage: 20.47,
   activeSIPs: 5,
   nextInvestment: "2025-01-15",
+  monthlyGrowth: 8.2,
+  yearlyGrowth: 24.5,
+  riskScore: "Low",
+  diversificationScore: 85,
+};
+
+const marketData = {
+  tonPrice: 2.45,
+  tonChange: 5.2,
+  totalMarketCap: 12500000000,
+  defiTVL: 2500000000,
+  stakingAPY: 8.5,
+  lendingAPY: 12.3,
 };
 
 const sipPlans = [
@@ -286,6 +299,73 @@ export default function Dashboard() {
             </Card>
           </motion.div>
         </div>
+
+        {/* Market Overview */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <Card className="ton-card">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <TrendingUp className="w-5 h-5 mr-2" />
+                TON Ecosystem Market Overview
+              </CardTitle>
+              <CardDescription>
+                Real-time market data and DeFi opportunities on TON blockchain
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">TON Price</span>
+                    <Badge className="ton-status-success">
+                      +{marketData.tonChange}%
+                    </Badge>
+                  </div>
+                  <div className="text-2xl font-bold">
+                    ${marketData.tonPrice}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Market Cap: $
+                    {(marketData.totalMarketCap / 1000000000).toFixed(1)}B
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">DeFi TVL</span>
+                    <Badge className="ton-badge">TON Ecosystem</Badge>
+                  </div>
+                  <div className="text-2xl font-bold">
+                    ${(marketData.defiTVL / 1000000000).toFixed(1)}B
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Total Value Locked
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Staking APY</span>
+                    <Badge className="ton-status-success">
+                      {marketData.stakingAPY}%
+                    </Badge>
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {marketData.stakingAPY}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Current staking rewards
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Main Content */}
         <Tabs defaultValue="sips" className="space-y-6">
