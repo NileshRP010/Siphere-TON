@@ -198,7 +198,7 @@ export default function Dashboard() {
               Track your SIP performance and manage investments
             </p>
           </div>
-          <Button className="ton-button font-medium mt-4 sm:mt-0">
+          <Button className="ton-button font-medium mt-4 sm:mt-0" asChild>
             <Link href="/create-sip" className="flex items-center">
               <Plus className="w-4 h-4 mr-2" />
               Create New SIP

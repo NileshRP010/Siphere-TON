@@ -517,13 +517,13 @@ export default function HowItWorks() {
                 on TON blockchain
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="ton-button" size="lg">
+                <Button className="ton-button" size="lg" asChild>
                   <Link href="/create-sip" className="flex items-center">
                     Create Your First SIP
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" asChild>
                   <Link href="/dashboard" className="flex items-center">
                     View Dashboard
                     <BarChart3 className="w-4 h-4 ml-2" />

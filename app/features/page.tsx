@@ -623,13 +623,13 @@ export default function Features() {
                 all these powerful features
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="ton-button" size="lg">
+                <Button className="ton-button" size="lg" asChild>
                   <Link href="/create-sip" className="flex items-center">
                     Get Started Now
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" asChild>
                   <Link href="/how-it-works" className="flex items-center">
                     Learn More
                     <FileText className="w-4 h-4 ml-2" />

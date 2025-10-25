@@ -610,13 +610,17 @@ export default function About() {
                 journey with Siphere today.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                <Button
+                  size="lg"
+                  className="bg-primary hover:bg-primary/90"
+                  asChild
+                >
                   <Link href="/create-sip" className="flex items-center">
                     Start Investing
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" asChild>
                   <Link href="/how-it-works" className="flex items-center">
                     Learn More
                     <Rocket className="ml-2 h-5 w-5" />

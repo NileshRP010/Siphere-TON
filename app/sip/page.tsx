@@ -155,7 +155,10 @@ export default function SIPPlans() {
               Manage your systematic investment plans
             </p>
           </div>
-          <Button className="bg-accent hover:bg-accent/90 text-black font-medium mt-4 sm:mt-0">
+          <Button
+            className="bg-accent hover:bg-accent/90 text-black font-medium mt-4 sm:mt-0"
+            asChild
+          >
             <Link href="/sip/create" className="flex items-center">
               <Plus className="w-4 h-4 mr-2" />
               Create New SIP
@@ -436,7 +439,10 @@ export default function SIPPlans() {
                   : "Create your first systematic investment plan to get started."}
               </p>
               {!searchTerm && statusFilter === "all" && (
-                <Button className="bg-accent hover:bg-accent/90 text-black font-medium">
+                <Button
+                  className="bg-accent hover:bg-accent/90 text-black font-medium"
+                  asChild
+                >
                   <Link href="/sip/create">Create Your First SIP</Link>
                 </Button>
               )}

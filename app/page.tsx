@@ -215,6 +215,7 @@ export default function Home() {
                   <Button
                     size="lg"
                     className="ton-button animate-glow text-lg px-8 py-4"
+                    asChild
                   >
                     <Link href="/create-sip" className="flex items-center">
                       Start Your SIP
@@ -237,6 +238,7 @@ export default function Home() {
                     variant="outline"
                     size="lg"
                     className="text-lg px-8 py-4 button-hover hover-glow"
+                    asChild
                   >
                     <Link href="/how-it-works" className="flex items-center">
                       Learn How
@@ -505,6 +507,7 @@ export default function Home() {
               <Button
                 size="lg"
                 className="bg-primary hover:bg-primary/90 button-hover"
+                asChild
               >
                 <Link href="/how-it-works" className="flex items-center">
                   Learn More Details
@@ -949,6 +952,7 @@ export default function Home() {
                         onClick={handleCreateSIP}
                         className="w-full bg-primary hover:bg-primary/90 h-12 text-lg button-hover"
                         size="lg"
+                        asChild
                       >
                         <Link href="/create-sip" className="flex items-center">
                           Create Full SIP Plan
