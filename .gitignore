@@ -35,3 +35,7 @@ next-env.d.ts
 attached assets/
 local/
 *.local.*
+
+# project docs to keep local-only
+SWAP_COFFEE_GRANT_APPLICATION.md
+TON_MIGRATION_README.md
