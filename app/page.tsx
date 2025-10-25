@@ -328,25 +328,25 @@ export default function Home() {
             {[
               {
                 label: "Total Value Locked",
-                value: "$2.4M",
+                value: "$12,500",
                 icon: Lock,
                 color: "text-blue-400",
               },
               {
                 label: "Active SIPs",
-                value: "1,247",
+                value: "17",
                 icon: Activity,
                 color: "text-green-400",
               },
               {
                 label: "Average APY",
-                value: "8.2%",
+                value: "4.1%",
                 icon: TrendingUp,
                 color: "text-purple-400",
               },
               {
                 label: "Insurance Coverage",
-                value: "94%",
+                value: "22%",
                 icon: Shield,
                 color: "text-yellow-400",
               },
