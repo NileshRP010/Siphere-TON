@@ -1,25 +1,33 @@
-// Simplified TON contracts for demo purposes
+import {
+  Address,
+  Cell,
+  beginCell,
+  contractAddress,
+  StateInit,
+  toNano,
+} from "@ton/core";
+import { TonClient } from "@ton/ton";
 
 // SIP Contract Interface
 export interface SIPContract {
-  address: string;
-  owner: string;
+  address: Address;
+  owner: Address;
   token: string;
-  amount: string;
+  amount: bigint;
   frequency: number; // days
   strategy: string;
   insurance: boolean;
   nextExecution: number;
-  totalInvested: string;
-  totalReturns: string;
+  totalInvested: bigint;
+  totalReturns: bigint;
   isActive: boolean;
 }
 
 // Insurance Contract Interface
 export interface InsuranceContract {
-  address: string;
-  totalCoverage: string;
-  totalPremiums: string;
+  address: Address;
+  totalCoverage: bigint;
+  totalPremiums: bigint;
   activePolicies: number;
   claimsPaid: number;
 }
@@ -31,35 +39,42 @@ export const TON_CLIENT_CONFIG = {
 };
 
 export class TonSiphereContracts {
+  private client: TonClient;
   private isTestnet: boolean;
 
   constructor(isTestnet: boolean = true) {
     this.isTestnet = isTestnet;
+    this.client = new TonClient({
+      endpoint: isTestnet
+        ? TON_CLIENT_CONFIG.testnet
+        : TON_CLIENT_CONFIG.mainnet,
+    });
   }
 
   // Create SIP Contract
   async createSIP(
-    owner: string,
+    owner: Address,
     token: string,
-    amount: string,
+    amount: bigint,
     frequency: number,
     strategy: string,
     insurance: boolean
-  ): Promise<string> {
+  ): Promise<Address> {
     try {
       // This would create a new SIP contract on TON
       // For demo purposes, we'll return a mock address
       console.log("Creating SIP contract:", {
-        owner,
+        owner: owner.toString(),
         token,
-        amount,
+        amount: amount.toString(),
         frequency,
         strategy,
         insurance,
       });
 
-      // Return a mock contract address
-      return `mock-sip-${Date.now()}`;
+      // Return a mock contract address for now
+      // In production, this would deploy a real contract
+      return Address.parse("EQD4FPq-PRDieyQKkizFTRtSDyucUIqrj0v_zXJmqaDp6_0t");
     } catch (error) {
       console.error("Error creating SIP contract:", error);
       throw error;
@@ -67,7 +82,7 @@ export class TonSiphereContracts {
   }
 
   // Get SIP Contract State
-  async getSIPState(contractAddress: string): Promise<SIPContract | null> {
+  async getSIPState(contractAddress: Address): Promise<SIPContract | null> {
     try {
       // This would read the contract state from TON blockchain
       // For demo purposes, we'll return mock data
@@ -75,13 +90,13 @@ export class TonSiphereContracts {
         address: contractAddress,
         owner: contractAddress, // Mock
         token: "TON",
-        amount: "100",
+        amount: toNano("100"),
         frequency: 7,
         strategy: "staking",
         insurance: true,
         nextExecution: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        totalInvested: "1000",
-        totalReturns: "50",
+        totalInvested: toNano("1000"),
+        totalReturns: toNano("50"),
         isActive: true,
       };
     } catch (error) {
@@ -91,11 +106,11 @@ export class TonSiphereContracts {
   }
 
   // Execute SIP Investment
-  async executeSIP(contractAddress: string): Promise<boolean> {
+  async executeSIP(contractAddress: Address): Promise<boolean> {
     try {
       // This would execute the SIP investment on TON
       // Integration with swap.coffee API would go here
-      console.log("Executing SIP for contract:", contractAddress);
+      console.log("Executing SIP for contract:", contractAddress.toString());
       return true;
     } catch (error) {
       console.error("Error executing SIP:", error);
@@ -105,12 +120,14 @@ export class TonSiphereContracts {
 
   // Pause/Resume SIP
   async toggleSIP(
-    contractAddress: string,
+    contractAddress: Address,
     isActive: boolean
   ): Promise<boolean> {
     try {
       console.log(
-        `Toggling SIP ${contractAddress} to ${isActive ? "active" : "paused"}`
+        `Toggling SIP ${contractAddress.toString()} to ${
+          isActive ? "active" : "paused"
+        }`
       );
       return true;
     } catch (error) {
@@ -121,13 +138,13 @@ export class TonSiphereContracts {
 
   // Get Insurance Contract State
   async getInsuranceState(
-    contractAddress: string
+    contractAddress: Address
   ): Promise<InsuranceContract | null> {
     try {
       return {
         address: contractAddress,
-        totalCoverage: "1000000",
-        totalPremiums: "50000",
+        totalCoverage: toNano("1000000"),
+        totalPremiums: toNano("50000"),
         activePolicies: 892,
         claimsPaid: 12,
       };
@@ -139,16 +156,16 @@ export class TonSiphereContracts {
 
   // Submit Insurance Claim
   async submitClaim(
-    contractAddress: string,
-    sipAddress: string,
-    amount: string,
+    contractAddress: Address,
+    sipAddress: Address,
+    amount: bigint,
     reason: string
   ): Promise<boolean> {
     try {
       console.log("Submitting insurance claim:", {
-        contract: contractAddress,
-        sip: sipAddress,
-        amount: amount,
+        contract: contractAddress.toString(),
+        sip: sipAddress.toString(),
+        amount: amount.toString(),
         reason,
       });
       return true;

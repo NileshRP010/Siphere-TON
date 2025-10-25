@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Address } from "@ton/core";
 import {
   TonSiphereContracts,
   SwapCoffeeIntegration,
@@ -136,6 +137,7 @@ export function useTonSiphere() {
 
       setLoading(true);
       try {
+        const amountBigInt = BigInt(parseFloat(sipData.amount) * 1e9); // Convert to nanoTON
         const frequencyDays =
           sipData.frequency === "Weekly"
             ? 7
@@ -144,9 +146,9 @@ export function useTonSiphere() {
             : 30;
 
         const contractAddress = await sipContracts.createSIP(
-          address,
+          Address.parse(address),
           sipData.token,
-          sipData.amount,
+          amountBigInt,
           frequencyDays,
           sipData.strategy,
           sipData.insurance
@@ -154,7 +156,7 @@ export function useTonSiphere() {
 
         // Add to local state
         const newSIP: SIPData = {
-          id: contractAddress,
+          id: contractAddress.toString(),
           name: sipData.name,
           token: sipData.token,
           amount: sipData.amount,
@@ -197,7 +199,10 @@ export function useTonSiphere() {
       if (!sipContracts) return;
 
       try {
-        const success = await sipContracts.toggleSIP(sipId, isActive);
+        const success = await sipContracts.toggleSIP(
+          Address.parse(sipId),
+          isActive
+        );
 
         if (success) {
           setSips((prev) =>
@@ -222,7 +227,7 @@ export function useTonSiphere() {
       if (!sipContracts) return;
 
       try {
-        const success = await sipContracts.executeSIP(sipId);
+        const success = await sipContracts.executeSIP(Address.parse(sipId));
 
         if (success) {
           // Update SIP data after execution
@@ -243,9 +248,9 @@ export function useTonSiphere() {
 
       try {
         const success = await sipContracts.submitClaim(
-          "mock-insurance-address",
-          claimData.sipId,
-          claimData.amount,
+          Address.parse("mock-insurance-address"),
+          Address.parse(claimData.sipId),
+          BigInt(parseFloat(claimData.amount) * 1e9),
           claimData.reason
         );
 
